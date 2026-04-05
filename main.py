@@ -1,5 +1,4 @@
 from __future__ import annotations
-import time
 from pathlib import Path
 
 import numpy as np
@@ -25,13 +24,11 @@ from npe import (
 from pebble import ProcessPool
 from concurrent.futures import TimeoutError
 
-
 PARAMETER_NAMES = [
     "x1", "y1", "x2", "y2", "x3", "y3",
     "vx1", "vy1", "vx2", "vy2", "vx3", "vy3",
     "m1", "m2", "m3",
 ]
-
 
 def sample_parameters() -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Sample masses, initial positions, and initial velocities.
@@ -40,7 +37,6 @@ def sample_parameters() -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     init_positions = np.random.uniform(-5.0, 5.0, size=(3, 2)).astype(np.float32)
     init_velocities = np.random.uniform(-2.0, 2.0, size=(3, 2)).astype(np.float32)
     return masses, init_positions, init_velocities
-
 
 def build_theta(
     init_positions: np.ndarray,
@@ -60,8 +56,6 @@ def build_theta(
         ]
     ).astype(np.float32)
     return theta
-
-
 
 def _worker_task(t_max, track_duration, num_points, G):
     """Executes a single simulation attempt."""
@@ -84,7 +78,6 @@ def _worker_task(t_max, track_duration, num_points, G):
             return theta, x
     return None
 
-
 def generate_dataset(
     n_samples: int,
     save_path: str,
@@ -101,7 +94,6 @@ def generate_dataset(
     if n_cores is None:
         n_cores = os.cpu_count() - 1
         
-
     print(f"Generating {n_samples} samples for {save_path} using {n_cores} parallel cores...")
 
     worker_func = partial(_worker_task, t_max, track_duration, num_points, G)
@@ -144,12 +136,10 @@ def generate_dataset(
     x_array = np.stack(x_list, axis=0)
 
     np.savez(save_path, theta=theta_array, x=x_array)
-    print(f"\nSuccessfully saved dataset to {save_path}")
-    print(f"Final shapes -> theta: {theta_array.shape}, x: {x_array.shape}\n")
-    print("-" * 50)
+
+    print(f"Final shapes:\ntheta: {theta_array.shape}, x: {x_array.shape}\n")
 
     return theta_array, x_array
-
 
 def evaluate_on_test_set(
     posterior,
@@ -226,13 +216,13 @@ def evaluate_on_test_set(
     overall_mae = torch.mean(torch.abs(errors)).cpu().item()
     overall_coverage_90 = torch.mean(covered_90_tensor).cpu().item()
 
-    print("\n--- Final Robust Evaluation Report ---")
+    print("\nFinal Eval Report:")
     print(f"Total Orbits Attempted: {num_examples}")
     print(f"Successful Evaluations: {len(successful_indices)}")
-    print(f"Chaotic Rejections:     {failed_evals} ({(failed_evals/num_examples)*100:.1f}%)")
+    print(f"Chaotic Rejections: {failed_evals} ({(failed_evals/num_examples)*100:.1f}%)")
     print(f"Overall posterior-mean RMSE: {overall_rmse:.4f}")
-    print(f"Overall posterior-mean MAE:  {overall_mae:.4f}")
-    print(f"Overall 90% coverage:       {overall_coverage_90:.4f}")
+    print(f"Overall posterior-mean MAE: {overall_mae:.4f}")
+    print(f"Overall 90% coverage: {overall_coverage_90:.4f}")
 
     print("\nPer-parameter test metrics:")
     rmse_cpu = rmse.cpu()
@@ -240,7 +230,6 @@ def evaluate_on_test_set(
     coverage_90_cpu = coverage_90.cpu()
     avg_interval_width_cpu = avg_interval_width.cpu()
     
-    # Import PARAMETER_NAMES locally or ensure it's available in scope
     PARAMETER_NAMES = ["x1", "y1", "x2", "y2", "x3", "y3", "vx1", "vy1", "vx2", "vy2", "vx3", "vy3", "m1", "m2", "m3"]
     for i, name in enumerate(PARAMETER_NAMES):
         print(
@@ -259,7 +248,6 @@ def train_and_evaluate(
     """Load datasets, train NPE, evaluate on test set, and inspect one posterior."""
     cfg = NPEConfig(dataset_path=train_dataset_path)
 
-    # Detect available device
     if torch.backends.mps.is_available():
         device = "mps"
     elif torch.cuda.is_available():
@@ -323,8 +311,6 @@ def train_and_evaluate(
 
     # SBC across entire set
     run_simulation_based_calibration(posterior, theta_test.cpu(), x_test.cpu(), x_mean.cpu(), x_std.cpu(), num_posterior_samples=1000)
-
-
 
 def main() -> None:
     set_seed(7)

@@ -13,7 +13,6 @@ from sbi.inference import NPE
 from sbi.neural_nets import posterior_nn
 from sbi.utils import BoxUniform
 
-
 Array = np.ndarray
 Tensor = torch.Tensor
 
@@ -22,7 +21,6 @@ PARAMETER_NAMES = [
     "vx1", "vy1", "vx2", "vy2", "vx3", "vy3",
     "m1", "m2", "m3",
 ]
-
 
 @dataclass
 class NPEConfig:
@@ -101,7 +99,6 @@ class TrajectoryEmbeddingNet(torch.nn.Module):
         x = self.output_net(x)
         return x
 
-
 def make_prior(cfg: NPEConfig, device: str = "cpu") -> BoxUniform:
     """Create a box prior over the 15 inferred parameters."""
     low = torch.tensor(
@@ -123,7 +120,6 @@ def make_prior(cfg: NPEConfig, device: str = "cpu") -> BoxUniform:
         device=device
     )
     return BoxUniform(low=low, high=high)
-
 
 def validate_dataset(theta: Array, x: Array, cfg: NPEConfig) -> None:
     """Validate dataset shapes and basic numerical sanity."""
@@ -148,7 +144,6 @@ def validate_dataset(theta: Array, x: Array, cfg: NPEConfig) -> None:
         raise ValueError("theta contains NaN or inf values.")
     if not np.all(np.isfinite(x)):
         raise ValueError("x contains NaN or inf values.")
-
 
 def load_dataset(dataset_path: str | Path, cfg: NPEConfig) -> Tuple[Tensor, Tensor]:
     """Load a precomputed dataset from an .npz file.
@@ -310,7 +305,6 @@ def plot_posterior_marginals(
     fig.suptitle("Posterior marginals for inferred initial conditions and masses")
     fig.tight_layout()
     fig.savefig("./plots/posterior_marginals.png", dpi=300, bbox_inches="tight")
-    print("Saved posterior marginal plot to ./plots/posterior_marginals.png")
     plt.show()
     plt.close(fig)
 
@@ -345,7 +339,6 @@ def main() -> None:
         posterior_samples,
         true_theta=true_theta,
     )
-
 
 if __name__ == "__main__":
     main()

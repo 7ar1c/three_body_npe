@@ -17,7 +17,6 @@ from test.validation import (
 )
 from main import evaluate_on_test_set
 
-# Everything needed from your neural network file
 from npe import (
     NPEConfig,
     condition_posterior_on_example,

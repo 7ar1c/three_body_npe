@@ -88,7 +88,6 @@ def evaluate_pretrained_model(
     """Load a previously trained NPE model and run the full evaluation suite."""
     cfg = NPEConfig(dataset_path=test_dataset_path)
 
-    # 1. Dynamically Detect Hardware for the Cluster
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Hardware Check: Running evaluation on '{device.upper()}'")
 

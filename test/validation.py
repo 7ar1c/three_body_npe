@@ -8,8 +8,8 @@ import torch
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 
-from sbi.analysis.plot import pp_plot_lc2st, sbc_rank_plot
-from sbi.diagnostics import check_sbc
+from sbi.analysis.plot import pp_plot_lc2st, sbc_rank_plot, plot_tarp
+from sbi.diagnostics import check_sbc, run_tarp, check_tarp
 from sbi.diagnostics.lc2st import LC2ST
 
 from generate.generate_data import three_body_ode
@@ -107,7 +107,7 @@ def run_posterior_predictive_check(posterior, x_obs, x_mean, x_std, num_samples:
     plt.legend()
     plt.grid(True, alpha=0.3)
     plt.savefig(PLOTS_DIR / "posterior_predictive_check.png", dpi=300, bbox_inches="tight")
-    plt.close() # Replaced plt.show()
+    plt.close()
 
 
 def run_simulation_based_calibration(posterior, theta_test, x_test, x_mean, x_std, num_posterior_samples: int = 1000, max_sbc_samples: int = 250):
@@ -156,7 +156,7 @@ def run_simulation_based_calibration(posterior, theta_test, x_test, x_mean, x_st
     check_stats = check_sbc(ranks, thetas_cpu, dap_samples, num_posterior_samples=num_posterior_samples)
 
     print("SBC diagnostics:")
-    print(f"  KS p-values per parameter = {check_stats['ks_pvals'].numpy()}")
+    print(f"KS p-values per parameter = {check_stats['ks_pvals'].numpy()}")
 
     for plot_type in ["hist", "cdf"]:
         fig, _ = sbc_rank_plot(ranks=ranks, num_posterior_samples=num_posterior_samples, plot_type=plot_type, num_bins=20)
@@ -170,8 +170,6 @@ def run_simulation_based_calibration(posterior, theta_test, x_test, x_mean, x_st
 
 
 def run_expected_coverage_diagnostics(posterior, theta_test, x_test, x_mean, x_std, num_posterior_samples: int = 1000, max_coverage_samples: int = 250):
-    from sbi.diagnostics import run_tarp, check_tarp
-    from sbi.analysis.plot import plot_tarp
     
     num_test_samples = min(len(theta_test), max_coverage_samples)
     indices = torch.randperm(len(theta_test))[:num_test_samples]
@@ -216,8 +214,8 @@ def run_expected_coverage_diagnostics(posterior, theta_test, x_test, x_mean, x_s
     atc, ks_pval = check_tarp(expected_coverage, nominal_coverage)
 
     print("Expected coverage diagnostics:")
-    print(f"  Area-to-curve (ATC) statistic = {float(atc):.6f}")
-    print(f"  KS p-value                    = {float(ks_pval):.6f}")
+    print(f"Area-to-curve (ATC) statistic = {float(atc):.6f}")
+    print(f"KS p-value = {float(ks_pval):.6f}")
 
     fig, ax = plot_tarp(expected_coverage, nominal_coverage)
     ax.set_title("SBI Expected Coverage (TARP)")

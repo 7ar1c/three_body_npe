@@ -57,8 +57,6 @@ def main():
             )
         else:
             print(f"-> Test Batch {i} already exists. Skipping.")
-            
-    print("\n--- Massive Data Generation Complete ---")
 
 if __name__ == "__main__":
     main()

@@ -8,8 +8,6 @@ from generate.generate_data import three_body_ode, collision_event
 from scipy.integrate import solve_ivp
 from main import sample_parameters, build_theta
 
-
-
 def create_close_encounter_event(threshold=0.5):
 
     def close_encounter(t, y, m1, m2, m3, G):
@@ -72,14 +70,10 @@ def generate_chaotic_track(masses, init_positions, init_velocities, t_max=150.0,
     
     return track_tensor
 
-
-
-
 def _chaotic_worker_task(t_max, track_duration, num_points, G, encounter_threshold):
     """Executes a single chaotic simulation attempt."""
     masses, init_positions, init_velocities = sample_parameters()
     
-    # Use the targeted chaos generator
     x = generate_chaotic_track(
         masses=masses,
         init_positions=init_positions,

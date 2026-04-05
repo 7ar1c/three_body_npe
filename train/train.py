@@ -21,9 +21,6 @@ def train_model(data_dir: str = "new_dataset", max_files: int = 5) -> None:
     start_time = time.time()
     set_seed(42)
 
-    print(f"--- Starting NPE Training Pipeline ---")
-    
-
     regular_files = sorted([f for f in glob.glob(f"{data_dir}/train_batch_*.npz") if "chaotic" not in f])
     chaos_files = sorted(glob.glob(f"{data_dir}/train_batch_chaotic_*.npz"))
     
