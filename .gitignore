@@ -1,0 +1,15 @@
+# Your specific folders
+sbi-logs/
+plots/
+__pycache__/
+
+# Mac hidden files
+.DS_Store
+
+# Virtual Environments (Prevents pushing your massive Python setup)
+.venv/
+.conda/
+
+
+datasets/
+

@@ -1,0 +1,111 @@
+Job started on Wed Mar 25 09:56:39 AM EDT 2026
+Running on node: gpu-pt1-03
+--- DIAGNOSTICS ---
+Wed Mar 25 09:56:48 2026       
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 470.199.02   Driver Version: 470.199.02   CUDA Version: 11.4     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|                               |                      |               MIG M. |
+|===============================+======================+======================|
+|   0  NVIDIA GeForce ...  On   | 00000000:8A:00.0 Off |                  N/A |
+| 29%   27C    P8     7W / 250W |      1MiB / 11178MiB |      0%      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+                                                                               
++-----------------------------------------------------------------------------+
+| Processes:                                                                  |
+|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+|        ID   ID                                                   Usage      |
+|=============================================================================|
+|  No running processes found                                                 |
++-----------------------------------------------------------------------------+
+Using Python located at: /work/t3somani/.conda/envs/npe_env/bin/python
+PyTorch Version: 2.5.1+cu118
+CUDA Available: True
+-------------------
+Starting PyTorch training...
+Hardware Check: Running evaluation on 'CUDA'
+Loading test dataset from ./dataset_chaotic/test_batch_chaotic_01.npz...
+
+Loading trained model from ./trained_npe_model_450k.pt to CUDA...
+
+Starting Evaluation...
+
+Evaluating on 50000 held-out test examples (device: cuda:0)...
+
+
+--- Final Robust Evaluation Report ---
+Total Orbits Attempted: 50000
+Successful Evaluations: 49999
+Chaotic Rejections:     1 (0.0%)
+Overall posterior-mean RMSE: 0.0162
+Overall posterior-mean MAE:  0.0014
+Overall 90% coverage:       0.9845
+
+Per-parameter test metrics:
+ x1: RMSE=0.0225, MAE=0.0024, 90% coverage=0.9902, avg 90% width=0.0168
+ y1: RMSE=0.0198, MAE=0.0023, 90% coverage=0.9704, avg 90% width=0.0146
+ x2: RMSE=0.0265, MAE=0.0026, 90% coverage=0.9829, avg 90% width=0.0167
+ y2: RMSE=0.0128, MAE=0.0018, 90% coverage=0.9703, avg 90% width=0.0139
+ x3: RMSE=0.0268, MAE=0.0022, 90% coverage=0.9998, avg 90% width=0.0164
+ y3: RMSE=0.0307, MAE=0.0028, 90% coverage=0.9916, avg 90% width=0.0154
+vx1: RMSE=0.0098, MAE=0.0011, 90% coverage=0.9833, avg 90% width=0.0065
+vy1: RMSE=0.0055, MAE=0.0008, 90% coverage=0.9468, avg 90% width=0.0062
+vx2: RMSE=0.0065, MAE=0.0009, 90% coverage=0.9916, avg 90% width=0.0062
+vy2: RMSE=0.0044, MAE=0.0007, 90% coverage=0.9728, avg 90% width=0.0050
+vx3: RMSE=0.0102, MAE=0.0009, 90% coverage=0.9998, avg 90% width=0.0074
+vy3: RMSE=0.0113, MAE=0.0008, 90% coverage=1.0000, avg 90% width=0.0056
+ m1: RMSE=0.0087, MAE=0.0006, 90% coverage=0.9973, avg 90% width=0.0040
+ m2: RMSE=0.0025, MAE=0.0003, 90% coverage=0.9705, avg 90% width=0.0025
+ m3: RMSE=0.0052, MAE=0.0005, 90% coverage=0.9998, avg 90% width=0.0033
+
+Conditioned on test observation 0.
+Observation matrix shape = (32, 13)
+
+Posterior summary:
+ x1: mean= 0.9879, 90% CI=[ 0.9857,  0.9898], true= 0.9866
+ y1: mean=-3.4391, 90% CI=[-3.4411, -3.4372], true=-3.4398
+ x2: mean=-3.4401, 90% CI=[-3.4421, -3.4382], true=-3.4401
+ y2: mean=-4.4185, 90% CI=[-4.4204, -4.4166], true=-4.4192
+ x3: mean= 3.6613, 90% CI=[ 3.6595,  3.6630], true= 3.6618
+ y3: mean= 1.0100, 90% CI=[ 1.0076,  1.0127], true= 1.0112
+vx1: mean= 0.8319, 90% CI=[ 0.8310,  0.8328], true= 0.8323
+vy1: mean=-1.9172, 90% CI=[-1.9180, -1.9164], true=-1.9177
+vx2: mean= 1.8787, 90% CI=[ 1.8775,  1.8799], true= 1.8796
+vy2: mean= 1.3300, 90% CI=[ 1.3293,  1.3306], true= 1.3298
+vx3: mean=-1.1506, 90% CI=[-1.1517, -1.1494], true=-1.1506
+vy3: mean=-1.2727, 90% CI=[-1.2734, -1.2720], true=-1.2727
+ m1: mean= 1.2489, 90% CI=[ 1.2484,  1.2494], true= 1.2491
+ m2: mean= 2.4015, 90% CI=[ 2.4011,  2.4020], true= 2.4014
+ m3: mean= 1.9637, 90% CI=[ 1.9634,  1.9641], true= 1.9640
+Saved posterior marginal plot to ./plots/posterior_marginals.png
+No open matplotlib figures found for prefix 'posterior_marginals_obs_0'.
+
+Running Posterior Predictive Check with 50 physics simulations...
+
+Starting massive GPU Simulation-Based Calibration (SBC)...
+
+Running GPU-Accelerated Robust SBC on 5000 test samples...
+SBC Complete. Successfully used 5000/5000 orbits.
+SBC diagnostics:
+  KS p-values per parameter = [0.0000000e+00 0.0000000e+00 0.0000000e+00 0.0000000e+00 0.0000000e+00
+ 0.0000000e+00 1.3801482e-36 0.0000000e+00 0.0000000e+00 0.0000000e+00
+ 0.0000000e+00 0.0000000e+00 0.0000000e+00 0.0000000e+00 0.0000000e+00]
+
+Starting global TARP coverage diagnostics...
+
+Running GPU-Accelerated Robust TARP on 1000 test samples...
+TARP Filtering Complete. Running official SBI TARP on 1000 safe orbits...
+Expected coverage diagnostics:
+  Area-to-curve (ATC) statistic = 1.176667
+  KS p-value                    = 0.963430
+
+Starting L-C2ST diagnostics...
+
+Running SBI local coverage diagnostics (L-C2ST) with 1000 calibration pairs...
+L-C2ST diagnostics on the selected observation:
+  Observed test statistic = 0.010236
+  p-value                 = 0.140000
+Job completed on Wed Mar 25 11:09:36 AM EDT 2026
